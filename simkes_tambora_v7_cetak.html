@@ -1,0 +1,833 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B2F45;--blue:#1565C0;--teal:#00796B;--green:#2E7D32;--red:#C62828;--purple:#6A1B9A;--bg:var(--color-background-tertiary);--card:var(--color-background-primary);--border:var(--color-border-tertiary);--text:var(--color-text-primary);--muted:var(--color-text-secondary)}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.hidden{display:none!important}
+input,select,textarea,button{font-family:inherit;font-size:13px}
+#pg-login{min-height:600px;display:flex;background:linear-gradient(135deg,#0B2F45,#1565C0 55%,#00796B)}
+.ll{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem;color:#fff}
+.ll-brand{display:flex;align-items:center;gap:.6rem;margin-bottom:1.5rem}
+.ll-ico{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.ll-brand h1{font-size:1.1rem;font-weight:700}
+.ll-brand p{font-size:.7rem;opacity:.7}
+.ll h2{font-size:1.5rem;font-weight:700;line-height:1.25;margin-bottom:.5rem}
+.ll .desc{font-size:.8rem;opacity:.75;line-height:1.7;max-width:340px}
+.feat{margin-top:1.2rem;display:flex;flex-direction:column;gap:.35rem}
+.feat-item{display:flex;align-items:center;gap:.5rem;font-size:.77rem;opacity:.85}
+.feat-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
+.lr{width:370px;background:var(--card);display:flex;align-items:center;justify-content:center;padding:2rem;box-shadow:-6px 0 30px rgba(0,0,0,.25)}
+.lbox{width:100%}
+.lhead{margin-bottom:1.2rem}
+.lhead h3{font-size:1.1rem;font-weight:700;color:var(--navy)}
+.lhead p{font-size:.73rem;color:var(--muted);margin-top:.18rem}
+.fg{margin-bottom:.7rem}
+.fg label{display:block;font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
+.fg input,.fg select{width:100%;padding:.5rem .65rem;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--text);outline:none}
+.fg input:focus,.fg select:focus{border-color:#1565C0;box-shadow:0 0 0 2px rgba(21,101,192,.12)}
+.btn-login{width:100%;padding:.6rem;background:linear-gradient(135deg,#1565C0,#00796B);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer}
+.err{background:#FFEBEE;color:#C62828;padding:.45rem .7rem;border-radius:6px;font-size:.77rem;margin-top:.5rem}
+#pg-app{min-height:600px;display:flex;flex-direction:column}
+.topbar{background:var(--navy);color:#fff;padding:.55rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-brand{display:flex;align-items:center;gap:.5rem}
+.tb-logo{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.tb-brand h2{font-size:.9rem;font-weight:700}
+.tb-brand p{font-size:.65rem;opacity:.65}
+.tb-right{display:flex;align-items:center;gap:.6rem}
+.tb-av{width:26px;height:26px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700}
+.tb-nm{font-size:.76rem;font-weight:600}
+.tb-rl{font-size:.63rem;opacity:.65}
+.btn-out{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:.3rem .65rem;border-radius:6px;cursor:pointer;font-size:.72rem}
+.mod-bar{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 1rem;flex-shrink:0}
+.mod-btn{padding:.55rem .85rem;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.mod-btn.active{color:#1565C0;border-bottom-color:#1565C0}
+.app-body{display:flex;flex:1;overflow:hidden;min-height:480px}
+.sidebar{width:195px;background:var(--card);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+.sb-sec{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:.65rem .8rem .25rem}
+.ni{display:flex;align-items:center;gap:.4rem;padding:.42rem .8rem;cursor:pointer;font-size:.78rem;color:var(--text);border-left:3px solid transparent}
+.ni:hover{background:var(--bg)}
+.ni.active{background:#E3F2FD;color:#1565C0;border-left-color:#1565C0;font-weight:600}
+.sb-bot{font-size:.6rem;color:var(--muted);padding:.65rem .8rem;border-top:1px solid var(--border);margin-top:auto}
+.main{flex:1;overflow-y:auto;padding:1rem;background:var(--bg)}
+.page-hdr{margin-bottom:.9rem}
+.page-hdr h2{font-size:1rem;font-weight:700}
+.page-hdr p{font-size:.76rem;color:var(--muted);margin-top:.12rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem}
+.card+.card{margin-top:.65rem}
+.card-title{font-size:.8rem;font-weight:700;margin-bottom:.7rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:.65rem}
+.stat{background:var(--bg);border-radius:8px;padding:.65rem;text-align:center}
+.stat-num{font-size:1.3rem;font-weight:700;color:#1565C0}
+.stat-lbl{font-size:.66rem;color:var(--muted);margin-top:.1rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.fg-full{grid-column:1/-1}
+.fg input,.fg select,.fg textarea{padding:.45rem .6rem;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--text);width:100%;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#1565C0;box-shadow:0 0 0 2px rgba(21,101,192,.12)}
+.btn{padding:.4rem .8rem;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:.77rem;font-weight:600}
+.btn-primary{background:#1565C0;color:#fff;border-color:#1565C0}
+.btn-success{background:#2E7D32;color:#fff;border-color:#2E7D32}
+.btn-danger{background:#C62828;color:#fff;border-color:#C62828}
+.btn-warn{background:#E65100;color:#fff;border-color:#E65100}
+.btn-sm{padding:.27rem .55rem;font-size:.7rem}
+.btn-row{display:flex;gap:.45rem;margin-top:.65rem;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+th{background:var(--navy);color:#fff;padding:.4rem .55rem;text-align:left;font-size:.7rem;font-weight:600}
+td{padding:.38rem .55rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:var(--bg)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:.13rem .42rem;border-radius:4px;font-size:.66rem;font-weight:700}
+.badge-blue{background:#E3F2FD;color:#1565C0}
+.badge-green{background:#E8F5E9;color:#2E7D32}
+.badge-orange{background:#FFF3E0;color:#E65100}
+.badge-red{background:#FFEBEE;color:#C62828}
+.badge-teal{background:#E0F2F1;color:#00796B}
+.badge-purple{background:#F3E5F5;color:#6A1B9A}
+.alert{padding:.6rem .8rem;border-radius:7px;font-size:.78rem;margin-bottom:.65rem}
+.alert-info{background:#E3F2FD;color:#1565C0;border-left:3px solid #1565C0}
+.alert-success{background:#E8F5E9;color:#2E7D32;border-left:3px solid #2E7D32}
+.alert-warn{background:#FFF3E0;color:#E65100;border-left:3px solid #E65100}
+
+/* PRINT */
+@media print{
+  .topbar,.mod-bar,.sidebar,.btn-row,.no-print,#pg-login{display:none!important}
+  .main{padding:0;overflow:visible}
+  .app-body{overflow:visible}
+  .card{border:none;box-shadow:none;padding:0}
+  #pg-app{display:block}
+  .print-doc{font-family:'Times New Roman',serif;font-size:11pt;color:#000;line-height:1.5}
+  .print-kop{text-align:center;border-bottom:3px double #000;padding-bottom:6pt;margin-bottom:12pt}
+  .print-kop .instansi{font-size:8pt}
+  .print-kop .puskesmas{font-size:13pt;font-weight:bold}
+  .print-kop .alamat{font-size:7.5pt}
+  .print-title{text-align:center;font-weight:bold;font-size:12pt;margin:12pt 0 4pt}
+  .print-sub{text-align:center;font-weight:bold;font-size:11pt;margin-bottom:10pt}
+  .bab{font-weight:bold;margin:10pt 0 4pt}
+  .print-table{width:100%;border-collapse:collapse;margin:6pt 0}
+  .print-table th,.print-table td{border:1px solid #000;padding:4pt 5pt;font-size:9pt}
+  .print-table th{background:#f0f0f0;font-weight:bold;text-align:center}
+  .ttd-area{display:flex;justify-content:space-between;margin-top:20pt;font-size:10pt}
+  .ttd-box{text-align:center;min-width:180pt}
+  .ttd-nama{font-weight:bold;border-top:1px solid #000;margin-top:36pt;padding-top:3pt}
+}
+</style>
+
+<div id="pg-login" style="display:flex">
+  <div class="ll">
+    <div class="ll-brand">
+      <div class="ll-ico">🏥</div>
+      <div><h1>SIMKES Tambora</h1><p>Sistem Informasi Promosi Kesehatan</p></div>
+    </div>
+    <h2>Pelaporan Penyuluhan<br>& Kampanye Kesehatan</h2>
+    <p class="desc">Format cetak sesuai laporan resmi Puskesmas Tambora — Penyuluhan Triwulanan & Laporan Kampanye Kesehatan/GERMAS.</p>
+    <div class="feat">
+      <div class="feat-item"><div class="dot"></div>Laporan Penyuluhan Triwulan (Bab 1.1–6.1) + Klaster KM/KIA/UPL</div>
+      <div class="feat-item"><div class="dot"></div>Laporan Kampanye Kesehatan / GERMAS (format A–J)</div>
+      <div class="feat-item"><div class="dot"></div>Komunikasi Risiko & Krisis (Pra/Saat/Pasca)</div>
+      <div class="feat-item"><div class="dot"></div>Cetak PDF siap pakai dengan kop surat & TTD</div>
+    </div>
+  </div>
+  <div class="lr">
+    <div class="lbox">
+      <div class="lhead"><h3>Masuk ke SIMKES</h3><p>Gunakan akun yang diberikan Admin Promkes</p></div>
+      <div class="fg"><label>Username</label><input type="text" id="l-user" placeholder="contoh: nabil"></div>
+      <div class="fg"><label>Password</label><input type="password" id="l-pass" placeholder="Password"></div>
+      <div class="fg"><label>Unit</label>
+        <select id="l-unit">
+          <option value="">-- Pilih Unit --</option>
+          <option>PKM Tambora</option>
+          <option>Kel. Jembatan Lima</option>
+          <option>Kel. Kalianyar</option>
+          <option>Kel. Duri Utara</option>
+          <option>Kel. Jembatan Besi</option>
+          <option>Kel. Angke</option>
+          <option>Kel. Tanah Sereal</option>
+          <option>Kel. Tambora</option>
+          <option>Kel. Roa Malaka</option>
+          <option>Pustu Pekojan 1</option>
+          <option>Pustu Pekojan 2</option>
+        </select>
+      </div>
+      <button class="btn-login" onclick="doLogin()">Masuk</button>
+      <div id="l-err" class="err hidden"></div>
+      <div style="margin-top:.9rem;padding:.55rem;background:var(--bg);border-radius:7px;font-size:.7rem;color:var(--muted)">
+        <b style="color:var(--text)">Akun Demo:</b><br>
+        admin / admin2026 / PKM Tambora<br>
+        nabil / nabil2026 / PKM Tambora<br>
+        pustu / pustu2026 / (pilih unit)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-app" class="hidden" style="display:flex;flex-direction:column">
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-logo">🏥</div>
+      <div><h2>SIMKES Tambora</h2><p>Pelaporan Promkes</p></div>
+    </div>
+    <div class="tb-right">
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <div class="tb-av" id="tb-av">?</div>
+        <div><div class="tb-nm" id="tb-nm">—</div><div class="tb-rl" id="tb-rl">—</div></div>
+      </div>
+      <button class="btn-out" onclick="doLogout()">Keluar</button>
+    </div>
+  </div>
+  <div class="mod-bar">
+    <div class="mod-btn active" id="mb-pen" onclick="switchMod('pen')">Penyuluhan</div>
+    <div class="mod-btn" id="mb-kam" onclick="switchMod('kam')">Kampanye / GERMAS</div>
+    <div class="mod-btn hidden" id="mb-rekap" onclick="switchMod('rekap')">Rekap PKM</div>
+    <div class="mod-btn" id="mb-sett" onclick="switchMod('sett')">Pengaturan</div>
+  </div>
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+    <div class="main" id="main"></div>
+  </div>
+</div>
+
+<script>
+const ACCS=[
+  {u:'admin',p:'admin2026',n:'Administrator',unit:'PKM Tambora',role:'admin'},
+  {u:'nabil',p:'nabil2026',n:'Nabil Abulfida Alfayadh, SKM',unit:'PKM Tambora',role:'promkes',nip:'199507112025061006'},
+  {u:'pustu',p:'pustu2026',n:'Petugas Promkes',unit:'',role:'promkes'},
+];
+const UNITS=['PKM Tambora','Kel. Jembatan Lima','Kel. Kalianyar','Kel. Duri Utara','Kel. Jembatan Besi','Kel. Angke','Kel. Tanah Sereal','Kel. Tambora','Kel. Roa Malaka','Pustu Pekojan 1','Pustu Pekojan 2'];
+const TW=['Triwulan I (Jan–Mar)','Triwulan II (Apr–Jun)','Triwulan III (Jul–Sep)','Triwulan IV (Okt–Des)'];
+const BULAN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const TOPIK=['Pencegahan DBD dan PSN 3M Plus','Penuhi Gizi Seimbang dengan Protein Hewani','Waspada Gejala dan Pencegahan Campak','Pemeriksaan Cek Kesehatan Gratis','Pencegahan Gejala Superflu','Etika Batuk dan Penggunaan Masker','Aktivasi dan Penggunaan JKN Mobile','Kesehatan Gigi dan Mulut pada Anak Sekolah','Edukasi PHBS Rumah Tangga','Sosialisasi Imunisasi Rutin Lengkap','Hipertensi','Diabetes Melitus','TBC','Stunting','GERMAS','Kesehatan Ibu / ANC','Imunisasi','KESPRO Remaja','Kesehatan Jiwa','Gizi Balita','Anemia','Diare','ISPA','ASI Eksklusif','KB / Keluarga Berencana','HIV/AIDS','NAPZA','Kesehatan Lansia','Obesitas','Rokok & Bahaya Merokok','Kesehatan Lingkungan','Lain-lain'];
+const TATANAN=['Tatanan Rumah Tangga','Tatanan Sekolah','Tatanan Tempat Kerja','Tatanan Tempat Umum','Tatanan Fasyankes','Tatanan Pesantren','Tatanan Pasar'];
+const MEDIA=['Ceramah','Diskusi','Leaflet','Poster','Video','Media Sosial','Lain-lain'];
+const DANA=['BOK','BLUD','APBD','Non Budgeting','Lain-lain'];
+const JENIS_KRISIS=['Banjir','Kebakaran','Kewaspadaan DBD','Gempa','Wabah Penyakit','Lain-lain'];
+const GERMAS_IND=['Indikator 1 – Aktivitas Fisik','Indikator 2 – PHBS','Indikator 3 – Pangan Sehat & Gizi','Indikator 4 – Deteksi Dini','Indikator 5 – Kualitas Lingkungan','Indikator 6 – Edukasi Hidup Sehat'];
+
+let S={user:null,mod:'pen',page:'dash',unit:'',tw:0,bulan:new Date().getMonth(),
+  pen:{},krisis:{},abat:{},kampanye:{},
+  kapus:'dr. Maryati Kasiman, M.KKK',nip_kapus:'197803312006042007'};
+
+function key(u,tw,mod){return u+'|'+tw+'|'+mod;}
+
+function doLogin(){
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  const unit=document.getElementById('l-unit').value;
+  const err=document.getElementById('l-err');
+  err.classList.add('hidden');
+  if(!u||!p||!unit){err.textContent='Semua field wajib diisi.';err.classList.remove('hidden');return;}
+  const acc=ACCS.find(a=>a.u===u&&a.p===p);
+  if(!acc){err.textContent='Username atau password salah.';err.classList.remove('hidden');return;}
+  if(acc.unit&&acc.unit!==unit){err.textContent='Unit tidak sesuai akun ini.';err.classList.remove('hidden');return;}
+  S.user={...acc,unit};S.unit=unit;
+  document.getElementById('pg-login').classList.add('hidden');
+  document.getElementById('pg-app').classList.remove('hidden');
+  document.getElementById('tb-nm').textContent=acc.n;
+  document.getElementById('tb-av').textContent=acc.n[0];
+  document.getElementById('tb-rl').textContent=unit+' · '+acc.role;
+  if(unit==='PKM Tambora')document.getElementById('mb-rekap').classList.remove('hidden');
+  S.mod='pen';buildSidebar('dash');
+}
+
+function doLogout(){
+  S.user=null;
+  document.getElementById('pg-login').style.display='flex';
+  document.getElementById('pg-app').classList.add('hidden');
+  document.getElementById('l-user').value='';document.getElementById('l-pass').value='';
+  document.getElementById('l-err').classList.add('hidden');
+  document.getElementById('mb-rekap').classList.add('hidden');
+}
+
+function switchMod(m){
+  S.mod=m;
+  ['pen','kam','rekap','sett'].forEach(x=>{document.getElementById('mb-'+x)?.classList.toggle('active',x===m);});
+  buildSidebar('dash');
+}
+
+function buildSidebar(page){
+  const sb=document.getElementById('sidebar');
+  if(S.mod==='pen'){
+    sb.innerHTML=`
+      <div class="sb-sec">Penyuluhan</div>
+      ${ni('dash','📊','Dashboard')}
+      ${ni('pen-input','📋','Input Data Penyuluhan')}
+      ${ni('krisis-input','⚠️','Komunikasi Risiko & Krisis')}
+      ${ni('abat-input','🎗️','ABAT (HIV/Kespro/NAPZA)')}
+      ${ni('pen-cetak','🖨️','Cetak Laporan Triwulan')}
+      <div class="sb-sec" style="margin-top:.4rem">Periode</div>
+      <div style="padding:.4rem .8rem">
+        <select style="width:100%;font-size:.72rem;padding:.3rem" onchange="S.tw=+this.value;buildSidebar(S.page)">
+          ${TW.map((t,i)=>`<option value="${i}"${i===S.tw?' selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="sb-bot">SIMKES Tambora v7 · 2026</div>`;
+  } else if(S.mod==='kam'){
+    sb.innerHTML=`
+      <div class="sb-sec">Kampanye / GERMAS</div>
+      ${ni('kam-dash','📊','Dashboard')}
+      ${ni('kam-input','📝','Input Kampanye Kesehatan')}
+      ${ni('kam-cetak','🖨️','Cetak Laporan Kampanye')}
+      <div class="sb-bot">SIMKES Tambora v7 · 2026</div>`;
+  } else if(S.mod==='rekap'){
+    sb.innerHTML=`
+      <div class="sb-sec">Rekap PKM</div>
+      ${ni('rekap-pen','📋','Rekap Penyuluhan')}
+      ${ni('rekap-kam','📊','Rekap Kampanye')}
+      <div class="sb-bot">SIMKES Tambora v7 · 2026</div>`;
+  } else {
+    sb.innerHTML=`
+      <div class="sb-sec">Pengaturan</div>
+      ${ni('sett-kapus','⚙️','Kepala Puskesmas')}
+      <div class="sb-bot">SIMKES Tambora v7 · 2026</div>`;
+  }
+  renderPage(page||S.page);
+}
+
+function ni(page,ic,lbl){
+  return`<div class="ni${S.page===page?' active':''}" onclick="go('${page}')">${ic} ${lbl}</div>`;
+}
+function go(p){S.page=p;buildSidebar(p);}
+
+function renderPage(p){
+  S.page=p;
+  const m=document.getElementById('main');
+  if(p==='dash') m.innerHTML=pageDash();
+  else if(p==='pen-input') m.innerHTML=pagePenInput();
+  else if(p==='krisis-input') m.innerHTML=pageKrisisInput();
+  else if(p==='abat-input') m.innerHTML=pageAbatInput();
+  else if(p==='pen-cetak') m.innerHTML=pagePenCetak();
+  else if(p==='kam-dash') m.innerHTML=pageKamDash();
+  else if(p==='kam-input') m.innerHTML=pageKamInput();
+  else if(p==='kam-cetak') m.innerHTML=pageKamCetak();
+  else if(p==='rekap-pen') m.innerHTML=pageRekapPen();
+  else if(p==='rekap-kam') m.innerHTML=pageRekapKam();
+  else if(p==='sett-kapus') m.innerHTML=pageSettKapus();
+  else m.innerHTML=pageDash();
+}
+
+function pageDash(){
+  const pd=S.pen[key(S.unit,S.tw,'pen')]||[];
+  const kd=S.krisis[key(S.unit,S.tw,'krisis')]||[];
+  const ad=S.abat[key(S.unit,S.tw,'abat')]||[];
+  const kmd=Object.values(S.kampanye).filter(k=>k&&k.unit===S.unit);
+  return`<div class="page-hdr"><h2>Dashboard Promkes</h2><p>Unit: <b>${S.unit}</b> · ${TW[S.tw]}</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">${pd.length}</div><div class="stat-lbl">Materi Penyuluhan</div></div>
+    <div class="stat"><div class="stat-num">${pd.reduce((a,r)=>a+(+r.km||0)+(+r.kkia||0)+(+r.kupl||0),0)}</div><div class="stat-lbl">Total Peserta Penyuluhan</div></div>
+    <div class="stat"><div class="stat-num">${kd.length}</div><div class="stat-lbl">Materi Komunikasi Krisis</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" style="color:#6A1B9A">${ad.length}</div><div class="stat-lbl">Kegiatan ABAT</div></div>
+    <div class="stat"><div class="stat-num" style="color:#2E7D32">${kmd.length}</div><div class="stat-lbl">Laporan Kampanye</div></div>
+    <div class="stat"><div class="stat-num" style="color:#E65100">${TW[S.tw].split(' ')[0]+' '+TW[S.tw].split(' ')[1]}</div><div class="stat-lbl">Periode Aktif</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Panduan Format Laporan</div>
+    <div style="font-size:.78rem;line-height:1.7;color:var(--muted)">
+      <b style="color:var(--text)">Penyuluhan Triwulan</b> → Bab 1.1 (Latar Belakang) → 2.1 (Tujuan) → 3.1 (Frekuensi & Peserta per Materi) → 4.1 (Komunikasi Risiko Pra/Saat/Pasca Krisis) → 5.1 (ABAT) → 6.1 (Penutup)<br><br>
+      <b style="color:var(--text)">Kampanye Kesehatan / GERMAS</b> → A (Latar Belakang) → B (Tujuan) → C (Sasaran) → D (Tema) → E (Narasumber) → F (Pelaksanaan) → G (Pelaksana) → H (Pembiayaan) → I (Hasil Kegiatan) → J (Penutup)
+    </div>
+  </div>`;
+}
+
+function pagePenInput(){
+  const pd=S.pen[key(S.unit,S.tw,'pen')]||[];
+  return`<div class="page-hdr"><h2>Input Data Penyuluhan</h2><p>${TW[S.tw]} · Unit: <b>${S.unit}</b></p></div>
+  <div class="card">
+    <div class="card-title">Tambah Materi Penyuluhan</div>
+    <div class="form-grid">
+      <div class="fg"><label>Tanggal</label><input type="date" id="p-tgl" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Topik / Materi Edukasi</label><select id="p-topik"><option value="">-- Pilih --</option>${TOPIK.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="fg"><label>Tatanan</label><select id="p-tat"><option value="">-- Pilih --</option>${TATANAN.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="fg"><label>Lokasi / Sasaran</label><input type="text" id="p-lok" placeholder="cth: Posyandu Mawar 012, RW 05"></div>
+      <div class="fg"><label>Jumlah Frekuensi (kali)</label><input type="number" id="p-frek" min="1" value="1"></div>
+      <div class="fg"><label>Klaster Manajemen</label><input type="number" id="p-km" min="0" value="0"></div>
+      <div class="fg"><label>Klaster KIA</label><input type="number" id="p-kkia" min="0" value="0"></div>
+      <div class="fg"><label>Klaster UPL</label><input type="number" id="p-kupl" min="0" value="0"></div>
+      <div class="fg"><label>Media</label><select id="p-media"><option value="">-- Pilih --</option>${MEDIA.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="fg"><label>Sumber Dana</label><select id="p-dana"><option value="">-- Pilih --</option>${DANA.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="fg"><label>Pelaksana</label><input type="text" id="p-pelaksana" value="${S.user.n}"></div>
+      <div class="fg fg-full"><label>Keterangan</label><input type="text" id="p-ket" placeholder="Opsional"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="savePen()">Simpan</button></div>
+    <div id="p-msg"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Data Penyuluhan ${TW[S.tw]} (${pd.length} materi)</div>
+    ${pd.length===0?'<div class="alert alert-info">Belum ada data.</div>':
+    `<div style="overflow-x:auto"><table>
+      <thead><tr><th>No</th><th>Tanggal</th><th>Topik</th><th>Frekuensi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th><th>Dana</th><th>Aksi</th></tr></thead>
+      <tbody>${pd.map((r,i)=>`<tr><td>${i+1}</td><td>${r.tgl}</td><td>${r.topik}</td><td>${r.frek}</td><td>${r.km}</td><td>${r.kkia}</td><td>${r.kupl}</td><td><b>${(+r.km)+(+r.kkia)+(+r.kupl)}</b></td><td>${r.dana||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="delPen(${i})">X</button></td></tr>`).join('')}</tbody>
+      <tfoot><tr style="background:#E8F5E9"><td colspan="3"><b>TOTAL</b></td><td><b>${pd.reduce((a,r)=>a+(+r.frek||1),0)}</b></td><td><b>${pd.reduce((a,r)=>a+(+r.km||0),0)}</b></td><td><b>${pd.reduce((a,r)=>a+(+r.kkia||0),0)}</b></td><td><b>${pd.reduce((a,r)=>a+(+r.kupl||0),0)}</b></td><td><b>${pd.reduce((a,r)=>a+(+r.km||0)+(+r.kkia||0)+(+r.kupl||0),0)}</b></td><td></td><td></td></tr></tfoot>
+    </table></div>`}
+  </div>`;
+}
+
+function savePen(){
+  const tgl=document.getElementById('p-tgl').value;
+  const topik=document.getElementById('p-topik').value;
+  const tat=document.getElementById('p-tat').value;
+  const lok=document.getElementById('p-lok').value;
+  const frek=document.getElementById('p-frek').value||1;
+  const km=document.getElementById('p-km').value||0;
+  const kkia=document.getElementById('p-kkia').value||0;
+  const kupl=document.getElementById('p-kupl').value||0;
+  const media=document.getElementById('p-media').value;
+  const dana=document.getElementById('p-dana').value;
+  const pelaksana=document.getElementById('p-pelaksana').value;
+  const ket=document.getElementById('p-ket').value;
+  const msg=document.getElementById('p-msg');
+  if(!tgl||!topik){msg.innerHTML='<div class="alert alert-warn" style="margin-top:.5rem">Tanggal dan topik wajib diisi.</div>';return;}
+  const k=key(S.unit,S.tw,'pen');
+  if(!S.pen[k])S.pen[k]=[];
+  S.pen[k].push({tgl,topik,tat,lok,frek,km,kkia,kupl,media,dana,pelaksana,ket});
+  msg.innerHTML='<div class="alert alert-success" style="margin-top:.5rem">Data tersimpan!</div>';
+  setTimeout(()=>renderPage('pen-input'),700);
+}
+function delPen(i){const k=key(S.unit,S.tw,'pen');S.pen[k].splice(i,1);renderPage('pen-input');}
+
+function pageKrisisInput(){
+  const kd=S.krisis[key(S.unit,S.tw,'krisis')]||[];
+  return`<div class="page-hdr"><h2>Komunikasi Risiko & Krisis Kesehatan</h2><p>${TW[S.tw]} · Tiga fase: Pra / Saat / Pasca Krisis</p></div>
+  <div class="card">
+    <div class="card-title">Tambah Data Komunikasi Krisis</div>
+    <div class="form-grid">
+      <div class="fg"><label>Tanggal</label><input type="date" id="k-tgl" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Jenis Krisis</label><select id="k-jenis"><option value="">-- Pilih --</option>${JENIS_KRISIS.map(j=>`<option>${j}</option>`).join('')}</select></div>
+      <div class="fg"><label>Fase</label><select id="k-fase"><option>Pra Krisis</option><option>Saat Krisis</option><option>Pasca Krisis</option></select></div>
+      <div class="fg"><label>Materi Edukasi</label><input type="text" id="k-materi" placeholder="cth: Leptospirosis, PHBS"></div>
+      <div class="fg"><label>Frekuensi (kali)</label><input type="number" id="k-frek" min="1" value="1"></div>
+      <div class="fg"><label>Klaster Manajemen</label><input type="number" id="k-km" min="0" value="0"></div>
+      <div class="fg"><label>Klaster KIA</label><input type="number" id="k-kkia" min="0" value="0"></div>
+      <div class="fg"><label>Klaster UPL</label><input type="number" id="k-kupl" min="0" value="0"></div>
+      <div class="fg fg-full"><label>Lokasi / Keterangan</label><input type="text" id="k-lok" placeholder="cth: RW 01 Kel. Jembatan Lima"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-warn" onclick="saveKrisis()">Simpan</button></div>
+    <div id="k-msg"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Data Komunikasi Krisis ${TW[S.tw]} (${kd.length} data)</div>
+    ${kd.length===0?'<div class="alert alert-info">Belum ada data.</div>':
+    `<div style="overflow-x:auto"><table>
+      <thead><tr><th>No</th><th>Tanggal</th><th>Jenis Krisis</th><th>Fase</th><th>Materi</th><th>Frekuensi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th><th>Aksi</th></tr></thead>
+      <tbody>${kd.map((r,i)=>{
+        const fBadge=r.fase==='Pra Krisis'?'badge-blue':r.fase==='Saat Krisis'?'badge-red':'badge-green';
+        return`<tr><td>${i+1}</td><td>${r.tgl}</td><td>${r.jenis}</td><td><span class="badge ${fBadge}">${r.fase}</span></td><td>${r.materi}</td><td>${r.frek}</td><td>${r.km}</td><td>${r.kkia}</td><td>${r.kupl}</td><td><b>${(+r.km)+(+r.kkia)+(+r.kupl)}</b></td><td><button class="btn btn-danger btn-sm" onclick="delKrisis(${i})">X</button></td></tr>`;
+      }).join('')}</tbody>
+    </table></div>`}
+  </div>`;
+}
+function saveKrisis(){
+  const tgl=document.getElementById('k-tgl').value;
+  const jenis=document.getElementById('k-jenis').value;
+  const fase=document.getElementById('k-fase').value;
+  const materi=document.getElementById('k-materi').value;
+  const frek=document.getElementById('k-frek').value||1;
+  const km=document.getElementById('k-km').value||0;
+  const kkia=document.getElementById('k-kkia').value||0;
+  const kupl=document.getElementById('k-kupl').value||0;
+  const lok=document.getElementById('k-lok').value;
+  const msg=document.getElementById('k-msg');
+  if(!tgl||!jenis||!materi){msg.innerHTML='<div class="alert alert-warn" style="margin-top:.5rem">Tanggal, jenis krisis, dan materi wajib diisi.</div>';return;}
+  const k=key(S.unit,S.tw,'krisis');
+  if(!S.krisis[k])S.krisis[k]=[];
+  S.krisis[k].push({tgl,jenis,fase,materi,frek,km,kkia,kupl,lok});
+  msg.innerHTML='<div class="alert alert-success" style="margin-top:.5rem">Data tersimpan!</div>';
+  setTimeout(()=>renderPage('krisis-input'),700);
+}
+function delKrisis(i){const k=key(S.unit,S.tw,'krisis');S.krisis[k].splice(i,1);renderPage('krisis-input');}
+
+function pageAbatInput(){
+  const ad=S.abat[key(S.unit,S.tw,'abat')]||[];
+  return`<div class="page-hdr"><h2>Penyuluhan ABAT</h2><p>Aku Bangga Aku Tahu — HIV/AIDS, Kespro, NAPZA · ${TW[S.tw]}</p></div>
+  <div class="card">
+    <div class="card-title">Input Data ABAT</div>
+    <div class="form-grid">
+      <div class="fg"><label>Tanggal</label><input type="date" id="a-tgl" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Sub-Topik ABAT</label><select id="a-sub"><option>HIV/AIDS</option><option>Kesehatan Reproduksi (Kespro)</option><option>NAPZA</option></select></div>
+      <div class="fg"><label>Lokasi / Sekolah / Sasaran</label><input type="text" id="a-lok" placeholder="cth: SMPN 32 Jakarta"></div>
+      <div class="fg"><label>Frekuensi (kali)</label><input type="number" id="a-frek" min="1" value="1"></div>
+      <div class="fg"><label>Klaster Manajemen</label><input type="number" id="a-km" min="0" value="0"></div>
+      <div class="fg"><label>Klaster KIA</label><input type="number" id="a-kkia" min="0" value="0"></div>
+      <div class="fg"><label>Klaster UPL</label><input type="number" id="a-kupl" min="0" value="0"></div>
+      <div class="fg"><label>Pelaksana</label><input type="text" id="a-pelaksana" value="${S.user.n}"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-success" onclick="saveAbat()">Simpan</button></div>
+    <div id="a-msg"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Data ABAT ${TW[S.tw]} (${ad.length} data)</div>
+    ${ad.length===0?`<div class="alert alert-warn">Belum ada data ABAT ${TW[S.tw]}. Jika belum dilaksanakan, akan tertera "Penyuluhan ABAT belum dilakukan" di laporan.</div>`:
+    `<div style="overflow-x:auto"><table>
+      <thead><tr><th>No</th><th>Tanggal</th><th>Sub-Topik</th><th>Lokasi</th><th>Frekuensi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th><th>Aksi</th></tr></thead>
+      <tbody>${ad.map((r,i)=>`<tr><td>${i+1}</td><td>${r.tgl}</td><td><span class="badge badge-purple">${r.sub}</span></td><td>${r.lok}</td><td>${r.frek}</td><td>${r.km}</td><td>${r.kkia}</td><td>${r.kupl}</td><td><b>${(+r.km)+(+r.kkia)+(+r.kupl)}</b></td><td><button class="btn btn-danger btn-sm" onclick="delAbat(${i})">X</button></td></tr>`).join('')}</tbody>
+    </table></div>`}
+  </div>`;
+}
+function saveAbat(){
+  const tgl=document.getElementById('a-tgl').value;
+  const sub=document.getElementById('a-sub').value;
+  const lok=document.getElementById('a-lok').value;
+  const frek=document.getElementById('a-frek').value||1;
+  const km=document.getElementById('a-km').value||0;
+  const kkia=document.getElementById('a-kkia').value||0;
+  const kupl=document.getElementById('a-kupl').value||0;
+  const pelaksana=document.getElementById('a-pelaksana').value;
+  const msg=document.getElementById('a-msg');
+  if(!tgl){msg.innerHTML='<div class="alert alert-warn" style="margin-top:.5rem">Tanggal wajib diisi.</div>';return;}
+  const k=key(S.unit,S.tw,'abat');
+  if(!S.abat[k])S.abat[k]=[];
+  S.abat[k].push({tgl,sub,lok,frek,km,kkia,kupl,pelaksana});
+  msg.innerHTML='<div class="alert alert-success" style="margin-top:.5rem">Data tersimpan!</div>';
+  setTimeout(()=>renderPage('abat-input'),700);
+}
+function delAbat(i){const k=key(S.unit,S.tw,'abat');S.abat[k].splice(i,1);renderPage('abat-input');}
+
+function pagePenCetak(){
+  const pd=S.pen[key(S.unit,S.tw,'pen')]||[];
+  const kd=S.krisis[key(S.unit,S.tw,'krisis')]||[];
+  const ad=S.abat[key(S.unit,S.tw,'abat')]||[];
+  const twLabel=TW[S.tw];
+  const tgl=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+
+  const topikFrek={};
+  const topikKlaster={};
+  pd.forEach(r=>{
+    if(!topikFrek[r.topik]){topikFrek[r.topik]=0;topikKlaster[r.topik]={km:0,kkia:0,kupl:0};}
+    topikFrek[r.topik]+=(+r.frek||1);
+    topikKlaster[r.topik].km+=(+r.km||0);
+    topikKlaster[r.topik].kkia+=(+r.kkia||0);
+    topikKlaster[r.topik].kupl+=(+r.kupl||0);
+  });
+
+  const praKrisis=kd.filter(r=>r.fase==='Pra Krisis');
+  const saatKrisis=kd.filter(r=>r.fase==='Saat Krisis');
+  const pascaKrisis=kd.filter(r=>r.fase==='Pasca Krisis');
+
+  const krisisFrekMap=(arr)=>{
+    const m={};
+    arr.forEach(r=>{if(!m[r.jenis+'|'+r.materi])m[r.jenis+'|'+r.materi]={jenis:r.jenis,materi:r.materi,frek:0,km:0,kkia:0,kupl:0};m[r.jenis+'|'+r.materi].frek+=(+r.frek||1);m[r.jenis+'|'+r.materi].km+=(+r.km||0);m[r.jenis+'|'+r.materi].kkia+=(+r.kkia||0);m[r.jenis+'|'+r.materi].kupl+=(+r.kupl||0);});
+    return Object.values(m);
+  };
+
+  const tabelPenyuluhan=(data,title)=>`
+    <div style="font-size:.77rem;font-weight:700;margin:.6rem 0 .3rem;color:#1A5276">${title}</div>
+    ${data.length===0?'<p style="font-size:.74rem;color:var(--muted)">Tidak ada data.</p>':
+    `<table class="print-table" style="font-size:.72rem">
+      <thead><tr><th>No</th><th>Jenis Krisis</th><th>Materi Edukasi</th><th>Frekuensi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th></tr></thead>
+      <tbody>${krisisFrekMap(data).map((r,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${r.jenis}</td><td>${r.materi}</td><td style="text-align:center">${r.frek}</td><td style="text-align:center">${r.km}</td><td style="text-align:center">${r.kkia}</td><td style="text-align:center">${r.kupl}</td><td style="text-align:center"><b>${r.km+r.kkia+r.kupl}</b></td></tr>`).join('')}</tbody>
+    </table>`}`;
+
+  return`<div class="page-hdr no-print"><h2>Cetak Laporan Penyuluhan</h2><p>${twLabel} · ${S.unit}</p></div>
+  <div class="btn-row no-print"><button class="btn btn-primary" onclick="window.print()">Cetak / Simpan PDF</button></div>
+  <div class="card print-doc" id="laporan-pen" style="margin-top:.5rem">
+    <div class="print-kop">
+      <div class="instansi">PEMERINTAH DAERAH KHUSUS IBUKOTA JAKARTA<br>DINAS KESEHATAN<br>SUKU DINAS KESEHATAN KOTA ADMINISTRASI JAKARTA BARAT</div>
+      <div class="puskesmas" style="font-size:.95rem;font-weight:700;color:#0B2F45;margin:.3rem 0">PUSAT KESEHATAN MASYARAKAT TAMBORA</div>
+      <div class="alamat" style="font-size:.68rem;color:var(--muted)">Jalan Krendang Utara No. 4, Tambora, Jakarta Barat, DKI Jakarta 11260<br>Telepon 021-6313651, 021-6318822 | www.puskesmastambora.com | pkm_kec_tambora@yahoo.co.id</div>
+    </div>
+
+    <div class="print-title" style="font-size:.9rem;font-weight:700;text-align:center">LAPORAN PENGELOLAAN PELAYANAN PROMOSI KESEHATAN<br>PENYULUHAN KESEHATAN KEPADA MASYARAKAT</div>
+    <div class="print-sub" style="font-size:.82rem;font-weight:700;text-align:center;margin-bottom:.8rem">${S.unit.toUpperCase()}<br>${twLabel.toUpperCase()} TAHUN 2026</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin-bottom:.3rem;color:#1A5276">1.1 Latar Belakang</div>
+    <div style="font-size:.77rem;margin-bottom:.3rem;font-weight:600">1.1. Dasar Hukum</div>
+    <div style="font-size:.75rem;line-height:1.65;padding-left:.8rem">
+      a. Undang-Undang Nomor 17 Tahun 2023 tentang Kesehatan.<br>
+      b. Peraturan Presiden Nomor 72 Tahun 2021 tentang Percepatan Penurunan Stunting.<br>
+      c. Peraturan Menteri Kesehatan Nomor 74 Tahun 2015 tentang Upaya Peningkatan Kesehatan dan Pencegahan Penyakit.<br>
+      d. Peraturan Menteri Kesehatan Nomor 67 Tahun 2016 tentang Penanggulangan Tuberkulosis.<br>
+      e. Peraturan Menteri Kesehatan Nomor 21 Tahun 2021 tentang Penyelenggaraan Pelayanan Kesehatan Masa Sebelum Hamil, Masa Hamil, dan Persalinan.
+    </div>
+    <div style="font-size:.77rem;margin:.4rem 0 .25rem;font-weight:600">1.2. Gambaran Umum</div>
+    <div style="font-size:.75rem;line-height:1.65;text-align:justify">Kecamatan Tambora merupakan wilayah dengan karakteristik urban yang sangat unik sekaligus menantang. Sebagai salah satu kawasan dengan kepadatan penduduk tertinggi di Provinsi DKI Jakarta, kegiatan penyuluhan kesehatan masyarakat dirancang untuk menjawab tantangan spesifik guna menurunkan angka kesakitan dan meningkatkan kualitas hidup warga di Kecamatan Tambora.</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.6rem 0 .25rem;color:#1A5276">2.1 Maksud, Tujuan, dan Pelaksanaan</div>
+    <div style="font-size:.77rem;margin-bottom:.2rem;font-weight:600">2.1. Maksud</div>
+    <div style="font-size:.75rem;line-height:1.65">Menanamkan budaya hidup sehat dan mandiri sehingga warga mampu mengenali risiko kesehatan di sekitarnya dan secara sukarela mengubah perilaku.</div>
+    <div style="font-size:.77rem;margin:.3rem 0 .2rem;font-weight:600">2.3. Periode Pelaksanaan</div>
+    <div style="font-size:.75rem">Kegiatan penyuluhan dilaksanakan selama periode <b>${twLabel}</b> Tahun 2026.</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.65rem 0 .25rem;color:#1A5276">3.1 Penyuluhan Edukasi Kesehatan Masyarakat</div>
+    <div style="font-size:.77rem;margin-bottom:.3rem;font-weight:600">3.1. Jumlah Frekuensi</div>
+    ${Object.keys(topikFrek).length===0?'<p style="font-size:.74rem;color:var(--muted)">Belum ada data penyuluhan.</p>':
+    `<table class="print-table" style="font-size:.72rem">
+      <thead><tr><th style="text-align:center;width:30px">No.</th><th>Materi Edukasi Kesehatan Masyarakat</th><th style="text-align:center;width:70px">Jumlah Frekuensi</th></tr></thead>
+      <tbody>${Object.entries(topikFrek).map(([t,f],i)=>`<tr><td style="text-align:center">${i+1}</td><td>${t}</td><td style="text-align:center">${f}</td></tr>`).join('')}</tbody>
+    </table>`}
+    <div style="font-size:.77rem;margin:.45rem 0 .3rem;font-weight:600">3.2. Jumlah Peserta</div>
+    ${Object.keys(topikKlaster).length===0?'<p style="font-size:.74rem;color:var(--muted)">Belum ada data.</p>':
+    `<table class="print-table" style="font-size:.72rem">
+      <thead><tr><th style="text-align:center;width:30px">No.</th><th>Materi Edukasi Kesehatan Masyarakat</th><th style="text-align:center;width:70px">Klaster Manajemen</th><th style="text-align:center;width:60px">Klaster KIA</th><th style="text-align:center;width:60px">Klaster UPL</th><th style="text-align:center;width:55px">Total</th></tr></thead>
+      <tbody>${Object.entries(topikKlaster).map(([t,k],i)=>`<tr><td style="text-align:center">${i+1}</td><td>${t}</td><td style="text-align:center">${k.km}</td><td style="text-align:center">${k.kkia}</td><td style="text-align:center">${k.kupl}</td><td style="text-align:center"><b>${k.km+k.kkia+k.kupl}</b></td></tr>`).join('')}
+      <tr style="background:#f0f4f0"><td></td><td><b>TOTAL</b></td><td style="text-align:center"><b>${pd.reduce((a,r)=>a+(+r.km||0),0)}</b></td><td style="text-align:center"><b>${pd.reduce((a,r)=>a+(+r.kkia||0),0)}</b></td><td style="text-align:center"><b>${pd.reduce((a,r)=>a+(+r.kupl||0),0)}</b></td><td style="text-align:center"><b>${pd.reduce((a,r)=>a+(+r.km||0)+(+r.kkia||0)+(+r.kupl||0),0)}</b></td></tr>
+      </tbody>
+    </table>`}
+
+    <div style="font-size:.8rem;font-weight:700;margin:.65rem 0 .25rem;color:#1A5276">4.1 Penyuluhan Komunikasi Risiko dan Krisis Kesehatan</div>
+    <div style="font-size:.77rem;margin-bottom:.3rem;font-weight:600">4.1. Jumlah Frekuensi</div>
+    ${tabelPenyuluhan(praKrisis,'Materi Edukasi Pra Krisis')}
+    ${tabelPenyuluhan(saatKrisis,'Materi Edukasi Saat Krisis')}
+    ${tabelPenyuluhan(pascaKrisis,'Materi Edukasi Pasca Krisis')}
+
+    <div style="font-size:.77rem;margin:.4rem 0 .3rem;font-weight:600">4.2. Jumlah Peserta Komunikasi Krisis</div>
+    ${kd.length===0?'<p style="font-size:.74rem;color:var(--muted)">Tidak ada data komunikasi krisis.</p>':
+    `<table class="print-table" style="font-size:.72rem">
+      <thead><tr><th>No.</th><th>Fase</th><th>Materi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th></tr></thead>
+      <tbody>${kd.map((r,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${r.fase}</td><td>${r.materi}</td><td style="text-align:center">${r.km}</td><td style="text-align:center">${r.kkia}</td><td style="text-align:center">${r.kupl}</td><td style="text-align:center"><b>${(+r.km)+(+r.kkia)+(+r.kupl)}</b></td></tr>`).join('')}</tbody>
+    </table>`}
+
+    <div style="font-size:.8rem;font-weight:700;margin:.65rem 0 .25rem;color:#1A5276">5.1 Penyuluhan Aku Bangga Aku Tahu (ABAT)</div>
+    ${ad.length===0?'<div style="font-size:.75rem">Penyuluhan ABAT belum dilakukan di '+twLabel+'.</div>':
+    `<table class="print-table" style="font-size:.72rem">
+      <thead><tr><th>No.</th><th>Tanggal</th><th>Sub-Topik</th><th>Lokasi</th><th>KM</th><th>KIA</th><th>UPL</th><th>Total</th></tr></thead>
+      <tbody>${ad.map((r,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${r.tgl}</td><td>${r.sub}</td><td>${r.lok}</td><td style="text-align:center">${r.km}</td><td style="text-align:center">${r.kkia}</td><td style="text-align:center">${r.kupl}</td><td style="text-align:center"><b>${(+r.km)+(+r.kkia)+(+r.kupl)}</b></td></tr>`).join('')}</tbody>
+    </table>`}
+
+    <div style="font-size:.8rem;font-weight:700;margin:.65rem 0 .25rem;color:#1A5276">6.1 Penutup</div>
+    <div style="font-size:.75rem;line-height:1.65;text-align:justify">Pelaksanaan Promosi Kesehatan di ${S.unit} pada ${twLabel} Tahun 2026 telah berjalan secara adaptif sesuai dengan dinamika epidemiologi wilayah. Secara keseluruhan, frekuensi penyuluhan menunjukkan tren positif dalam merespons kebutuhan kesehatan masyarakat.</div>
+    <div style="font-size:.77rem;margin:.35rem 0 .2rem;font-weight:600">6.1. Kendala</div>
+    <div style="font-size:.75rem;line-height:1.65;padding-left:.8rem">a. Kondisi wilayah padat hunian memerlukan adaptasi metode penyuluhan.<br>b. Keterbatasan waktu dan tempat di beberapa lokasi sasaran.</div>
+    <div style="font-size:.77rem;margin:.3rem 0 .2rem;font-weight:600">6.2. Evaluasi</div>
+    <div style="font-size:.75rem;line-height:1.65;padding-left:.8rem">a. Memperkuat koordinasi lintas sektor dan lintas program.<br>b. Mengembangkan media edukasi yang lebih adaptif untuk wilayah padat.</div>
+
+    <div style="margin-top:1.2rem;display:flex;justify-content:space-between;font-size:.75rem">
+      <div>
+        <div>Mengetahui</div>
+        <div>Kepala Puskesmas</div>
+        <div style="margin-top:2.2rem;font-weight:700">${S.kapus}</div>
+        <div>NIP. ${S.nip_kapus}</div>
+      </div>
+      <div style="text-align:right">
+        <div>Jakarta, ${tgl}</div>
+        <div>Pembuat Laporan</div>
+        <div style="margin-top:2.2rem;font-weight:700">${S.user.n}</div>
+        <div>NIP. ${S.user.nip||'—'}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function pageKamDash(){
+  const kms=Object.values(S.kampanye).filter(k=>k&&k.unit===S.unit);
+  return`<div class="page-hdr"><h2>Dashboard Kampanye Kesehatan</h2><p>Unit: <b>${S.unit}</b></p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">${kms.length}</div><div class="stat-lbl">Laporan Kampanye</div></div>
+    <div class="stat"><div class="stat-num">${kms.reduce((a,k)=>a+(+k.jml_siswa||0)+(+k.jml_guru||0),0)}</div><div class="stat-lbl">Total Peserta</div></div>
+    <div class="stat"><div class="stat-num" style="color:#2E7D32">${GERMAS_IND.length}</div><div class="stat-lbl">Indikator GERMAS</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Laporan Kampanye Tersimpan</div>
+    ${kms.length===0?'<div class="alert alert-info">Belum ada laporan kampanye. Klik "Input Kampanye Kesehatan" untuk membuat.</div>':
+    kms.map((k,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:.8rem;font-weight:700">${k.judul||'Kampanye '+(i+1)}</div>
+        <div style="font-size:.72rem;color:var(--muted)">${k.tgl} · ${k.tempat} · ${(+k.jml_siswa||0)+(+k.jml_guru||0)} peserta</div>
+      </div>
+      <div style="display:flex;gap:.4rem">
+        <button class="btn btn-primary btn-sm" onclick="editKam('${k.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="delKam('${k.id}')">Hapus</button>
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="btn-row"><button class="btn btn-success" onclick="go('kam-input')">Buat Laporan Kampanye Baru</button></div>`;
+}
+
+let editKamId=null;
+function editKam(id){editKamId=id;go('kam-input');}
+function delKam(id){delete S.kampanye[id];renderPage('kam-dash');}
+
+function pageKamInput(){
+  const existing=editKamId&&S.kampanye[editKamId]?S.kampanye[editKamId]:{};
+  const v=(f,def='')=>existing[f]||def;
+  return`<div class="page-hdr"><h2>${editKamId&&S.kampanye[editKamId]?'Edit':'Buat'} Laporan Kampanye Kesehatan</h2><p>Format: A–J sesuai template resmi PKM Tambora</p></div>
+  <div class="card">
+    <div class="card-title">A. Identitas Kegiatan</div>
+    <div class="form-grid">
+      <div class="fg fg-full"><label>Judul Laporan</label><input type="text" id="km-judul" placeholder="cth: Kampanye Kesehatan Hari Gizi Nasional Ke-66" value="${v('judul')}"></div>
+      <div class="fg"><label>Hari / Tanggal</label><input type="date" id="km-tgl" value="${v('tgl',new Date().toISOString().slice(0,10))}"></div>
+      <div class="fg"><label>Waktu</label><input type="text" id="km-waktu" placeholder="cth: 07.30 WIB s.d Selesai" value="${v('waktu')}"></div>
+      <div class="fg fg-full"><label>Tempat</label><input type="text" id="km-tempat" placeholder="cth: SMA Islam Tambora dan SMPN 32 Jakarta" value="${v('tempat')}"></div>
+      <div class="fg fg-full"><label>Tema Kampanye</label><input type="text" id="km-tema" placeholder='cth: "Penuhi Gizi Seimbang dari Pangan Lokal"' value="${v('tema')}"></div>
+      <div class="fg fg-full"><label>Slogan</label><input type="text" id="km-slogan" placeholder='cth: "Sehat Dimulai dari Piringku"' value="${v('slogan')}"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">B. Latar Belakang & Tujuan</div>
+    <div class="fg"><label>Gambaran Umum / Latar Belakang</label><textarea id="km-latbel" rows="4" placeholder="Uraikan kondisi kesehatan yang menjadi dasar kampanye...">${v('latbel')}</textarea></div>
+    <div class="fg"><label>Tujuan Kegiatan</label><textarea id="km-tujuan" rows="3" placeholder="a. ... b. ... c. ...">${v('tujuan')}</textarea></div>
+  </div>
+  <div class="card">
+    <div class="card-title">C. Sasaran Peserta</div>
+    <div class="form-grid">
+      <div class="fg"><label>Jumlah Peserta Utama (Siswa)</label><input type="number" id="km-jml-siswa" min="0" value="${v('jml_siswa',0)}"></div>
+      <div class="fg"><label>Jumlah Guru / Pendamping</label><input type="number" id="km-jml-guru" min="0" value="${v('jml_guru',0)}"></div>
+      <div class="fg fg-full"><label>Rincian Sasaran</label><textarea id="km-sasaran" rows="2" placeholder="cth: SMA Islam Tambora: 32 orang, SMPN 32 Jakarta: 36 orang">${v('sasaran')}</textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">E. Narasumber</div>
+    <div class="fg"><label>Narasumber</label><textarea id="km-nara" rows="3" placeholder="a. Nama – Jabatan/Profesi dari Unit/Instansi">${v('nara')}</textarea></div>
+  </div>
+  <div class="card">
+    <div class="card-title">G. Pelaksana & H. Pembiayaan</div>
+    <div class="form-grid">
+      <div class="fg"><label>Pelaksana</label><input type="text" id="km-pelaksana" placeholder="cth: Tim Gizi dan Promkes Puskesmas Tambora" value="${v('pelaksana')}"></div>
+      <div class="fg"><label>Sumber Pembiayaan</label><select id="km-dana"><option value="">-- Pilih --</option>${DANA.map(d=>`<option${v('dana')===d?' selected':''}>${d}</option>`).join('')}</select></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">I. Hasil Kegiatan</div>
+    <div class="fg"><label>Uraian Hasil / Output</label><textarea id="km-hasil" rows="4" placeholder="a. Terlaksananya... b. Tersedianya... c. Terjalinnya...">${v('hasil')}</textarea></div>
+    <div class="fg"><label>Indikator GERMAS yang Dicakup</label>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.25rem">
+        ${GERMAS_IND.map(g=>`<label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:normal;text-transform:none;letter-spacing:0">
+          <input type="checkbox" value="${g}" ${(v('germas_ind','')).includes(g)?'checked':''}> ${g}
+        </label>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">J. Penutup</div>
+    <div class="fg"><label>Kendala</label><textarea id="km-kendala" rows="2" placeholder="1) ... 2) ...">${v('kendala')}</textarea></div>
+    <div class="fg"><label>Evaluasi</label><textarea id="km-evaluasi" rows="2" placeholder="1) ... 2) ...">${v('evaluasi')}</textarea></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="saveKam()">Simpan Laporan</button>
+    <button class="btn" onclick="editKamId=null;go('kam-dash')">Batal</button>
+  </div>
+  <div id="km-msg"></div>`;
+}
+
+function saveKam(){
+  const judul=document.getElementById('km-judul').value;
+  const tgl=document.getElementById('km-tgl').value;
+  const msg=document.getElementById('km-msg');
+  if(!judul||!tgl){msg.innerHTML='<div class="alert alert-warn" style="margin-top:.5rem">Judul dan tanggal wajib diisi.</div>';return;}
+  const germasInd=[...document.querySelectorAll('#main input[type=checkbox]:checked')].map(c=>c.value);
+  const id=editKamId||('km_'+Date.now());
+  S.kampanye[id]={
+    id,unit:S.unit,judul,tgl,
+    waktu:document.getElementById('km-waktu').value,
+    tempat:document.getElementById('km-tempat').value,
+    tema:document.getElementById('km-tema').value,
+    slogan:document.getElementById('km-slogan').value,
+    latbel:document.getElementById('km-latbel').value,
+    tujuan:document.getElementById('km-tujuan').value,
+    jml_siswa:document.getElementById('km-jml-siswa').value,
+    jml_guru:document.getElementById('km-jml-guru').value,
+    sasaran:document.getElementById('km-sasaran').value,
+    nara:document.getElementById('km-nara').value,
+    pelaksana:document.getElementById('km-pelaksana').value,
+    dana:document.getElementById('km-dana').value,
+    hasil:document.getElementById('km-hasil').value,
+    germas_ind:germasInd.join(', '),
+    kendala:document.getElementById('km-kendala').value,
+    evaluasi:document.getElementById('km-evaluasi').value,
+  };
+  editKamId=null;
+  msg.innerHTML='<div class="alert alert-success" style="margin-top:.5rem">Laporan tersimpan!</div>';
+  setTimeout(()=>go('kam-dash'),800);
+}
+
+function pageKamCetak(){
+  const kms=Object.values(S.kampanye).filter(k=>k&&k.unit===S.unit);
+  if(kms.length===0)return`<div class="page-hdr"><h2>Cetak Laporan Kampanye</h2></div><div class="alert alert-warn">Belum ada laporan kampanye. Buat dulu di menu Input Kampanye Kesehatan.</div>`;
+  const tgl=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+
+  return`<div class="page-hdr no-print"><h2>Cetak Laporan Kampanye Kesehatan</h2><p>${kms.length} laporan tersimpan</p></div>
+  <div class="btn-row no-print"><button class="btn btn-primary" onclick="window.print()">Cetak / Simpan PDF</button></div>
+  ${kms.map(k=>`
+  <div class="card print-doc" style="margin-top:.6rem;page-break-after:always">
+    <div class="print-kop">
+      <div class="instansi" style="font-size:.66rem">PEMERINTAH DAERAH KHUSUS IBUKOTA JAKARTA<br>DINAS KESEHATAN<br>SUKU DINAS KESEHATAN KOTA ADMINISTRASI JAKARTA BARAT</div>
+      <div style="font-size:.9rem;font-weight:700;color:#0B2F45;margin:.25rem 0">PUSAT KESEHATAN MASYARAKAT TAMBORA</div>
+      <div style="font-size:.65rem;color:var(--muted)">Jalan Krendang Utara No. 4, Tambora, Jakarta Barat, DKI Jakarta 11260 | Tel. 021-6313651</div>
+    </div>
+
+    <div style="text-align:center;font-weight:700;font-size:.85rem;margin-bottom:.2rem">LAPORAN PELAKSANAAN KEGIATAN KAMPANYE KESEHATAN</div>
+    <div style="text-align:center;font-weight:700;font-size:.82rem;margin-bottom:.7rem">${k.judul.toUpperCase()}</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin-bottom:.25rem;color:#1A5276">A. Latar Belakang</div>
+    <div style="font-size:.77rem;margin-bottom:.2rem;font-weight:600">a. Dasar Hukum</div>
+    <div style="font-size:.74rem;padding-left:.8rem;line-height:1.65">1) Undang-Undang Republik Indonesia Nomor 17 Tahun 2023 tentang Kesehatan.<br>2) Instruksi Presiden Nomor 1 Tahun 2017 tentang GERMAS.<br>3) Peraturan Presiden Nomor 72 Tahun 2021 tentang Percepatan Penurunan Stunting.<br>4) Peraturan Menteri Kesehatan Nomor 41 Tahun 2014 tentang Pedoman Gizi Seimbang.</div>
+    <div style="font-size:.77rem;margin:.3rem 0 .2rem;font-weight:600">b. Gambaran Umum</div>
+    <div style="font-size:.74rem;line-height:1.65;text-align:justify">${k.latbel||'—'}</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">B. Tujuan Kegiatan</div>
+    <div style="font-size:.74rem;line-height:1.65;white-space:pre-line">${k.tujuan||'—'}</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">C. Sasaran</div>
+    <div style="font-size:.74rem;line-height:1.65">
+      <div style="white-space:pre-line">${k.sasaran||'—'}</div>
+      <div style="margin-top:.2rem">Total Peserta Siswa/Utama: <b>${k.jml_siswa||0} orang</b> | Guru/Pendamping: <b>${k.jml_guru||0} orang</b></div>
+    </div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">D. Tema</div>
+    <div style="font-size:.74rem">Tema: <b>"${k.tema||'—'}"</b> | Slogan: <b>"${k.slogan||'—'}"</b></div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">E. Narasumber</div>
+    <div style="font-size:.74rem;white-space:pre-line">${k.nara||'—'}</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">F. Pelaksanaan</div>
+    <div style="font-size:.74rem;line-height:1.8">
+      Hari/Tanggal : ${k.tgl?new Date(k.tgl).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'-'}<br>
+      Waktu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${k.waktu||'—'}<br>
+      Tempat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${k.tempat||'—'}
+    </div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">G. Pelaksana</div>
+    <div style="font-size:.74rem">${k.pelaksana||'—'}</div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">H. Pembiayaan</div>
+    <div style="font-size:.74rem">Sumber anggaran: <b>${k.dana||'—'}</b></div>
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">I. Hasil Kegiatan</div>
+    <div style="font-size:.74rem;line-height:1.65;white-space:pre-line">${k.hasil||'—'}</div>
+    ${k.germas_ind?`<div style="font-size:.74rem;margin-top:.3rem">Indikator GERMAS: <b>${k.germas_ind}</b></div>`:''}
+
+    <div style="font-size:.8rem;font-weight:700;margin:.55rem 0 .25rem;color:#1A5276">J. Penutup</div>
+    <div style="font-size:.77rem;font-weight:600;margin-bottom:.2rem">a. Kendala</div>
+    <div style="font-size:.74rem;white-space:pre-line;padding-left:.8rem">${k.kendala||'—'}</div>
+    <div style="font-size:.77rem;font-weight:600;margin:.3rem 0 .2rem">b. Evaluasi</div>
+    <div style="font-size:.74rem;white-space:pre-line;padding-left:.8rem">${k.evaluasi||'—'}</div>
+
+    <div style="margin-top:1.2rem;display:flex;justify-content:space-between;font-size:.74rem">
+      <div><div>Mengetahui</div><div>Kepala Puskesmas</div><div style="margin-top:2rem;font-weight:700">${S.kapus}</div><div>NIP. ${S.nip_kapus}</div></div>
+      <div style="text-align:right"><div>Jakarta, ${tgl}</div><div>Pembuat Laporan</div><div style="margin-top:2rem;font-weight:700">${S.user.n}</div><div>NIP. ${S.user.nip||'—'}</div></div>
+    </div>
+  </div>`).join('')}`;
+}
+
+function pageRekapPen(){
+  return`<div class="page-hdr"><h2>Rekap Penyuluhan Seluruh Unit</h2></div>
+  <div class="card"><div style="overflow-x:auto"><table>
+    <thead><tr><th>Unit</th>${TW.map(t=>`<th>${t.split(' ')[0]+' '+t.split(' ')[1]}</th>`).join('')}<th>Total Peserta</th></tr></thead>
+    <tbody>${UNITS.map(u=>{
+      const byTw=TW.map((_,i)=>{const pd=S.pen[key(u,i,'pen')]||[];return pd.reduce((a,r)=>a+(+r.km||0)+(+r.kkia||0)+(+r.kupl||0),0);});
+      const tot=byTw.reduce((a,v)=>a+v,0);
+      return`<tr><td>${u}</td>${byTw.map(v=>`<td style="text-align:center">${v||'-'}</td>`).join('')}<td style="text-align:center"><b>${tot}</b></td></tr>`;
+    }).join('')}</tbody>
+  </table></div></div>`;
+}
+
+function pageRekapKam(){
+  const allKam=Object.values(S.kampanye).filter(k=>k);
+  return`<div class="page-hdr"><h2>Rekap Kampanye Kesehatan Seluruh Unit</h2></div>
+  <div class="card">
+    ${allKam.length===0?'<div class="alert alert-info">Belum ada laporan kampanye.</div>':
+    `<table><thead><tr><th>Unit</th><th>Judul</th><th>Tanggal</th><th>Tempat</th><th>Peserta</th><th>Dana</th></tr></thead>
+    <tbody>${allKam.map(k=>`<tr><td>${k.unit}</td><td>${k.judul}</td><td>${k.tgl}</td><td>${k.tempat}</td><td><b>${(+k.jml_siswa||0)+(+k.jml_guru||0)}</b></td><td>${k.dana||'-'}</td></tr>`).join('')}</tbody>
+    </table>`}
+  </div>`;
+}
+
+function pageSettKapus(){
+  return`<div class="page-hdr"><h2>Pengaturan Kepala Puskesmas</h2></div>
+  <div class="card">
+    <div class="fg"><label>Nama Kepala Puskesmas</label><input type="text" id="s-kapus" value="${S.kapus}"></div>
+    <div class="fg"><label>NIP Kepala Puskesmas</label><input type="text" id="s-nip" value="${S.nip_kapus}"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="saveKapus()">Simpan</button></div>
+    <div id="s-msg"></div>
+  </div>`;
+}
+function saveKapus(){S.kapus=document.getElementById('s-kapus').value;S.nip_kapus=document.getElementById('s-nip').value;document.getElementById('s-msg').innerHTML='<div class="alert alert-success" style="margin-top:.5rem">Tersimpan!</div>';}
+</script>
